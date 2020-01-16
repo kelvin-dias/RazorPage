@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Modelo.Entidades;
 using Persistencia.Context;
 using Servicos.Entidades;
@@ -13,28 +11,23 @@ namespace ApplicationRazorPage
 {
     public class ConsultarOcorrenciaModel : PageModel
     {
-        private readonly EFContext _context;
+        //private readonly EFContext _context;
 
-        private readonly OcorrenciaServico _ocorrenciaServico = new OcorrenciaServico();
+        private OcorrenciaServico _ocorrenciaServico = new OcorrenciaServico();
 
-        public ConsultarOcorrenciaModel(EFContext context)
-        {
-            _context = context;
-        }
+        //public ConsultarOcorrenciaModel(EFContext context)
+        //{
+        //    _context = context;
+        //}
 
-        public ConsultarOcorrenciaModel(OcorrenciaServico ocorrenciaServico)
-        {
-            _ocorrenciaServico = ocorrenciaServico;
-        }
-
-        public IList<Ocorrencia> Ocorrencias { get;set; }
+        public IList<Ocorrencia> Ocorrencias { get; set; }
 
         [BindProperty]
         public Ocorrencia Ocorrencia { get; set; }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            Ocorrencias = await _context.ocorrencias.ToListAsync();
+            Ocorrencias =  _ocorrenciaServico.ObterOcorrenciasClassificadasPorDataHora().ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -44,13 +37,13 @@ namespace ApplicationRazorPage
                 return Page();
             }
 
-            Ocorrencia.NumeroOcorrencia = _ocorrenciaServico.GerarNumeroOcorrencia();
-            _context.ocorrencias.Add(Ocorrencia);
-            await _context.SaveChangesAsync();
+            //Ocorrencia.NumeroOcorrencia = _ocorrenciaServico.GerarNumeroOcorrencia();
+            //_context.ocorrencias.Add(Ocorrencia);
+            //await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./ConsultarOcorrencia");
         }
 
-        
+
     }
 }
